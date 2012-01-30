@@ -8,11 +8,11 @@
 namespace Ray\Annotation;
 
 /**
- * The ReflectionMethod class reports information about a method, and annotation
+ * The ReflectionClass class reports information about a class, and annotation
  * 
  * @author Akihito.Koriyama
  */
-class ReflectionMethod extends \ReflectionMethod implements AnnotatedElement
+class ReflectionClass extends \ReflectionClass implements AnnotatedElement
 {
     use AnnotationAccess;
 }
