@@ -1,6 +1,6 @@
 <?php
 // bootstrap for test
 
-require_once dirname(__DIR__) . '/src.php';
+require dirname(__DIR__) . '/src.php';
 
-require_once __DIR__ . '/SkeltonMock.php';
+require __DIR__ . '/Mock.php';

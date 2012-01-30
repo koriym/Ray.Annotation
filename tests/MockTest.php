@@ -5,20 +5,20 @@ namespace Ray\Annotation;
 /**
  * Test class for Ray.Annotation.
  */
-class SkeltonTest extends \PHPUnit_Framework_TestCase
+class mockTest extends \PHPUnit_Framework_TestCase
 {
-    protected $skelton;
+    protected $mock;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->skelton = new Skelton;
+        $this->mock = new \Ray\Annotation\Tests\Mock;
     }
 
     public function test_New()
     {
-        $actual = $this->skelton;
-        $this->assertInstanceOf('\Ray\Annotation\Skelton', $this->skelton);
+        $actual = $this->mock;
+        $this->assertInstanceOf('\Ray\Annotation\Tests\Mock', $this->mock);
     }
 
     /**
