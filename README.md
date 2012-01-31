@@ -7,7 +7,15 @@ Features
 --------
 
 - Inherited PHP Reflection class.
-- 'Doctrine-Annotation(2.2)' inside.
+- 'Doctrine-Annotation' inside.
+
+Rquirement
+-----------
+- PHP 5.4
+- APC (optional)
+
+Usage
+-----------
 
 Annotation Classes
 -----------
@@ -23,9 +31,8 @@ class Bar
 }
 ```
 
-Usage
------------
 you can now annotate other classes with your annotations:
+
 ```php
 <?php
 namespace MyCompany\Entity;
@@ -69,7 +76,7 @@ Here's how to install Ray.Annotation from source to run the unit tests:
 
 ```
 git clone git@github.com:koriym/Ray.Annotation.git
-cd ray.annotation
+cd Ray.Snnotation
 git submodule update --init
 phpunit
 ```
