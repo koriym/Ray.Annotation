@@ -7,84 +7,60 @@
  */
 namespace Ray\Annotation;
 
+use \Doctrine\Common\Annotations\AnnotationReader;
+
 trait AnnotationAccess
 {
-    /**
-    * (non-PHPdoc)
-    * @see Ray\Annotation.AnnotatedElement::getAnnotation()
-    */
-    public function getAnnotation($annotation)
-    {
-        $annotations = $this->getAnnotations();
-        $annotation = isset($annotations[$annotation]) ? $annotations[$annotation] : null;
-        return $annotation;
-    }
-    
     /**
      * (non-PHPdoc)
      * @see Ray\Annotation.AnnotatedElement::getAnnotations()
      */
     public function getAnnotations()
     {
-        $cacheId = 'rayanno' . $this->class . $this->name;
-        if (0 && apc_exists($cacheId)) {
-            return apc_fetch($cacheId);
+        $hasApc = function_exists('apc_fetch');
+        $cacheId = __NAMESPACE__ . $this->name;
+        if ($hasApc && apc_exists($cacheId)) {
+            $annotations = unserialize(apc_fetch($cacheId));
+            return $annotations;
         }
-        $doc = $this->getDocComment();
-        $result = $match = array();
-        preg_match_all('/@([A-Z][A-Za-z]+)(\("(.+)"\))*/', $doc, $match);
-        $keys = $match[1];
-        $values = $match[3];
-        $i = 0;
-        foreach ($keys as $key) {
-            $member = $this->getMember($values[$i++]);
-            $result[$key] = $member;
-//             $result[$key] = $values[$i++];
+        $read = [new AnnotationReader, self::GET_ANNOTATION_METHOD];
+        $annotations = $read($this);
+        if ($hasApc === true) {
+            apc_store($cacheId, serialize($annotations), 0);
         }
-        apc_store($cacheId, $result);
-        return $result;
+        $annotations = unserialize(apc_fetch($cacheId));
+        return $annotations;
     }
-    
+
+    /**
+     * (non-PHPdoc)
+     * @see Ray\Annotation.AnnotatedElement::getAnnotation()
+     */
+    public function getAnnotation($annotationName)
+    {
+        $annotations = $this->getAnnotations();
+
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof $annotationName) {
+                return $annotation;
+            }
+        }
+        return null;
+    }
+
     /**
      * (non-PHPdoc)
      * @see Ray\Annotation.AnnotatedElement::isAnnotationPresent()
      */
-    public function isAnnotationPresent($annotation)
+    public function isAnnotationPresent($annotationName)
     {
         $annotations = $this->getAnnotations();
-        $isAnnotationPresent = isset($annotations[$annotation]) ? true : null;
-        return $isAnnotationPresent;
+
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof $annotationName) {
+                return true;
+            }
+        }
+        return false;
     }
-    
-    /**
-    * Get member
-    *
-    * @param string $member "value" or "key1=value1,ke2=value2"
-    *
-    * @return mixed string or [$paramName => $named][]
-    */
-    private function getMember($member)
-    {
-        // signle annotation @Named($annotation)
-        if (preg_match("/^[a-zA-Z0-9_]+$/", $member)) {
-            return $member;
-        }
-        // multi annotation @Multi(memberKey1=memberVal1,memberKey2=memberVal2)
-        // http://stackoverflow.com/questions/168171/regular-expression-for-parsing-name-value-pairs
-        preg_match_all('/([^=,]*)=("[^"]*"|[^,"]*)/', $member, $matches);
-        if ($matches[0] === array()) {
-            return null;
-        }
-        $result = array();
-        $count = count($matches[0]);
-        for ($i = 0; $i < $count; $i++) {
-            $result[$matches[1][$i]] = $matches[2][$i];
-        }
-        list($key, $value) = each($result);
-        if (count($result) === 1 && $key === 'value') {
-            $result = $value;
-        }
-        return $result;
-    }
-    
 }

@@ -5,7 +5,7 @@ namespace Ray\Annotation;
 /**
  * Test class for Ray.Annotation.
  */
-class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
+class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 {
     protected $mock;
 
@@ -13,13 +13,13 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         apc_clear_cache('user');
-        $this->reflection = new ReflectionMethod('User', 'register');
+        $this->reflection = new ReflectionClass('User');
     }
 
     public function test_New()
     {
         $actual = $this->reflection;
-        $this->assertInstanceOf('\Ray\Annotation\ReflectionMethod', $this->reflection);
+        $this->assertInstanceOf('\Ray\Annotation\ReflectionClass', $this->reflection);
     }
 
     public function test_getAnnotations()
@@ -28,17 +28,18 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $foo = $actual[0];
         $bar = $actual[1];
         $this->assertSame('MyCompany\Annotations\Foo', get_class($foo));
-        $this->assertSame('foo_method', $foo->bar);
+        $this->assertSame('foo', $foo->bar);
         $this->assertSame('MyCompany\Annotations\Bar', get_class($bar));
-        $this->assertSame('bar_method', $bar->foo);
+        $this->assertSame('bar', $bar->foo);
     }
 
     public function test_getAnnotation()
     {
         $foo = $this->reflection->getAnnotation('MyCompany\Annotations\Foo');
         $actual = $foo->bar;
-        $this->assertSame('foo_method', $actual);
+        $this->assertSame('foo', $actual);
     }
+
 
     public function test_isAnnotationPresent()
     {
@@ -65,8 +66,8 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $foo = $actual[0];
         $bar = $actual[1];
         $this->assertSame('MyCompany\Annotations\Foo', get_class($foo));
-        $this->assertSame('foo_method', $foo->bar);
+        $this->assertSame('foo', $foo->bar);
         $this->assertSame('MyCompany\Annotations\Bar', get_class($bar));
-        $this->assertSame('bar_method', $bar->foo);
+        $this->assertSame('bar', $bar->foo);
     }
 }

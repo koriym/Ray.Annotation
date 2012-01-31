@@ -12,9 +12,9 @@ namespace Ray\Annotation;
  *
  * @author Akihito.Koriyama
  */
-class ReflectionClass extends \ReflectionClass implements AnnotatedElement
+class ReflectionProperty extends \ReflectionProperty implements AnnotatedElement
 {
-    const GET_ANNOTATION_METHOD = 'getClassAnnotations';
+    const GET_ANNOTATION_METHOD = 'getPropertyAnnotations';
 
     use AnnotationAccess;
 }
