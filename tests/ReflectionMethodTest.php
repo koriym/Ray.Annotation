@@ -12,7 +12,9 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        apc_clear_cache('user');
+        if (function_exists('apc_clear_cache')) {
+            apc_clear_cache('user');
+        }
         $this->reflection = new ReflectionMethod('User', 'register');
     }
 

@@ -28,7 +28,6 @@ trait AnnotationAccess
         if ($hasApc === true) {
             apc_store($cacheId, serialize($annotations), 0);
         }
-        $annotations = unserialize(apc_fetch($cacheId));
         return $annotations;
     }
 
